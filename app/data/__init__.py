@@ -9,7 +9,7 @@ Base URL for fetching data.
 """
 base_url = 'https://raw.githubusercontent.com/CSSEGISandData/2019-nCoV/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-%s.csv';
 
-@cached(cache=TTLCache(maxsize=1024, ttl=3600))
+@cached(cache=TTLCache(maxsize=1024, ttl=900))
 def get_data(category):
     """
     Retrieves the data for the provided type. The data is cached for 1 hour.

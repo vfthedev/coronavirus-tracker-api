@@ -1,7 +1,6 @@
 from flask import jsonify
 from flask import current_app as app
 from ..data import get_data
-from nested_lookup import get_occurrence_of_value
 from cachetools import cached, TTLCache
 
 

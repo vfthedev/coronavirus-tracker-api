@@ -8,7 +8,7 @@ def create_app():
     """
 
     # Create flask app with CORS enabled.
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static', static_folder='static')
     CORS(app)
 
     # Set app config from settings.

@@ -49,7 +49,7 @@ def full():
 
     outputJSON = jsonify(output)
 
-    f = open( 'data.json', 'w' )
+    f = open( 'app/static/data.json', 'w' )
     f.write(str(output))
     f.close()
 

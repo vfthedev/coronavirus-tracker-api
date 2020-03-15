@@ -12,7 +12,7 @@ def full():
     recovered = get_data('recovered')
 
     # prepare output dictionary
-    output = []
+    locationsOutput = []
 
     # Formatting
     for locationConfirmed in confirmed["locations"]:
@@ -45,12 +45,19 @@ def full():
         }
 
         # add current location to the output
-        output.append(locationOutput)
+        locationsOutput.append(locationOutput)
 
-    outputJSON = jsonify(output)
+    finalOutput = {
+        'locations': locationOutput,
+        'latest': {
+            'confirmed': confirmed['latest'],
+            'deaths':    deaths['latest'],
+            'recovered': recovered['latest'],
+        }
+    }
 
     f = open( 'app/static/data.json', 'w' )
-    f.write(str(output))
+    f.write(str(finalOutput))
     f.close()
 
-    return jsonify(output)
+    return jsonify(finalOutput)

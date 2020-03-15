@@ -3,7 +3,6 @@ from flask import current_app as app
 from ..data import get_data
 from cachetools import cached, TTLCache
 
-
 @app.route('/formatted')
 @cached(cache=TTLCache(maxsize=1024, ttl=900))
 def full():
@@ -47,5 +46,11 @@ def full():
 
         # add current location to the output
         output.append(locationOutput)
+
+    outputJSON = jsonify(output)
+
+    f = open( 'data.json', 'w' )
+    f.write(str(output))
+    f.close()
 
     return jsonify(output)

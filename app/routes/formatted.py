@@ -48,7 +48,7 @@ def full():
         locationsOutput.append(locationOutput)
 
     finalOutput = {
-        'locations': locationOutput,
+        'locations': locationsOutput,
         'latest': {
             'confirmed': confirmed['latest'],
             'deaths':    deaths['latest'],

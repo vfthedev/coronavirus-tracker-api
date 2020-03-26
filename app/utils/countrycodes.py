@@ -1,7 +1,12 @@
+from itertools import chain
+
 # Default country code.
 default_code = "XX"
 
-# Mapping of country names to alpha-2 codes.
+# Mapping of country names to alpha-2 codes according to
+# https://en.wikipedia.org/wiki/ISO_3166-1.
+# As a reference see also https://github.com/TakahikoKawasaki/nv-i18n (in Java)
+# fmt: off
 is_3166_1 = {
     "Afghanistan"                                  : "AF",
     "Åland Islands"                                : "AX",
@@ -122,6 +127,7 @@ is_3166_1 = {
     "Kiribati"                                     : "KI",
     "Korea, Democratic People's Republic of"       : "KP",
     "Korea, Republic of"                           : "KR",
+    "Kosovo, Republic of"                          : "XK",
     "Kuwait"                                       : "KW",
     "Kyrgyzstan"                                   : "KG",
     "Lao People's Democratic Republic"             : "LA",
@@ -216,7 +222,7 @@ is_3166_1 = {
     "Sudan"                                        : "SD",
     "Suriname"                                     : "SR",
     "Svalbard and Jan Mayen"                       : "SJ",
-    "Swaziland"                                    : "SZ",
+    "Eswatini"                                     : "SZ",  # previous name "Swaziland"
     "Sweden"                                       : "SE",
     "Switzerland"                                  : "CH",
     "Syrian Arab Republic"                         : "SY",
@@ -252,6 +258,16 @@ is_3166_1 = {
     "Yemen"                                        : "YE",
     "Zambia"                                       : "ZM",
     "Zimbabwe"                                     : "ZW",
+
+    # see also
+    # https://en.wikipedia.org/wiki/List_of_sovereign_states_and_dependent_territories_by_continent_(data_file)#Data_file
+    # https://en.wikipedia.org/wiki/List_of_sovereign_states_and_dependent_territories_by_continent
+    "United Nations Neutral Zone"                 : "XD",
+    "Iraq-Saudi Arabia Neutral Zone"              : "XE",
+    "Spratly Islands"                             : "XS",
+
+    # TODO "Disputed Territory" conflicts with `default_code`
+    # "Disputed Territory"                          : "XX",
 }
 
 # Mapping of alternative names, spelling, typos to the names of countries used
@@ -274,22 +290,24 @@ synonyms = {
     "Saint Barthelemy"               : "Saint Barthélemy",
     "Saint Martin"                   : "Saint Martin (French part)",
     "Palestine"                      : "Palestine, State of",
+    "occupied Palestinian territory" : "Palestine, State of",
+    "State of Palestine"             : "Palestine, State of",
+    "The West Bank and Gaza"         : "Palestine, State of",
     "Holy See"                       : "Holy See (Vatican City State)",
     "Brunei"                         : "Brunei Darussalam",
     "Hong Kong SAR"                  : "Hong Kong",
     "Taipei and environs"            : "Taiwan, Province of China",
-    "occupied Palestinian territory" : "Palestine, State of",
     "South Korea"                    : "Korea, Republic of",
     "Iran"                           : "Iran, Islamic Republic of",
     "Vatican City"                   : "Holy See (Vatican City State)",
     "DR Congo"                       : "Congo, the Democratic Republic of the",
+    "Republic of the Congo"          : "Congo",
     "Tanzania"                       : "Tanzania, United Republic of",
     "Venezuela"                      : "Venezuela, Bolivarian Republic of",
     "North Korea"                    : "Korea, Democratic People's Republic of",
     "Syria"                          : "Syrian Arab Republic",
     "Bolivia"                        : "Bolivia, Plurinational State of",
     "Laos"                           : "Lao People's Democratic Republic",
-    "State of Palestine"             : "Palestine, State of",
     "Moldova"                        : "Moldova, Republic of",
     "Eswatini"                       : "Swaziland",
     "Cabo Verde"                     : "Cape Verde",
@@ -332,22 +350,33 @@ synonyms = {
     "Congo (Kinshasa)"               : "Congo, the Democratic Republic of the",
     "Taiwan*"                        : "Taiwan, Province of China",
     "Reunion"                        : "Réunion",
+    "Curacao"                        : "Curaçao",
+    "Congo (Brazzaville)"            : "Congo",
+    "Deutschland"                    : "Germany",
+    "The Bahamas"                    : "Bahamas",
+    "The Gambia"                     : "Gambia",
+    "Kosovo"                         : "Kosovo, Republic of",
+    "Swaziland"                      : "Eswatini",
+    "Gambia, The"                    : "Gambia",
+    "Bahamas, The"                   : "Bahamas",
     # "Others" has no mapping, i.e. the default val is used
     # "Cruise Ship" has no mapping, i.e. the default val is used
 }
 
+# fmt: on
 def country_code(country):
     """
-    Return two letter country code (Alpha-2) according to
-    https://en.wikipedia.org/wiki/ISO_3166-1
+    Return two letter country code (Alpha-2) according to https://en.wikipedia.org/wiki/ISO_3166-1
     Defaults to "XX".
     """
+    # Look in synonyms if not found.
+    if not country in is_3166_1 and country in synonyms:
+        country = synonyms[country]
+
+    # Return code if country was found.
     if country in is_3166_1:
         return is_3166_1[country]
-    else:
-        if country in synonyms:
-            synonym = synonyms[country]
-            return is_3166_1[synonym]
-        else:
-            print ("No country_code found for '" + country + "'. Using '" + default_code + "'")
-            return default_code
+
+    # Default to default_code.
+    print("No country_code found for '" + country + "'. Using '" + default_code + "'")
+    return default_code
